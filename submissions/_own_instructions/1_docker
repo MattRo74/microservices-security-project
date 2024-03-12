@@ -18,3 +18,93 @@ Create docker image
 
 
 
+
+Docker bench
+------------
+
+4.5 Ensure Content trust for Docker is Enabled (Scored)
+
+Profile Applicability:
+ Level 2 - Docker - Linux
+Description:
+Content trust is disabled by default and should be enabled in line with organizational security policy.
+Rationale:
+Content trust provides the ability to use digital signatures for data sent to and received from remote Docker registries. These signatures allow client-side verification of the identity and the publisher of specific image tags and ensures the provenance of container images.
+Audit:
+You should execute the following command: echo $DOCKER_CONTENT_TRUST
+This should return a value of 1.
+Remediation:
+To enable content trust in a bash shell, you should enter the following command: export DOCKER_CONTENT_TRUST=1
+Alternatively, you could set this environment variable in your profile file so that content trust in enabled on every login.
+Impact:
+In an environment where DOCKER_CONTENT_TRUST is set, you are required to follow trust procedures whilst working with the image related commands - build, create, pull, pushand run. You can use the --disable-content-trust flag to run individual operations on tagged images without content trust on an as needed basis, but this defeats the purpose of enabling content trust and therefore should be avoided wherever possible.
+Note: Content trust is currently only available for users of the public Docker Hub. It is currently not available for the Docker Trusted Registry or for private registries.
+129 | P a g e
+Default Value:
+By default, content trust is disabled.
+References:
+1. https://docs.docker.com/engine/security/trust/content_trust/
+2. https://docs.docker.com/engine/reference/commandline/cli/#notary
+3. https://docs.docker.com/engine/reference/commandline/cli/#environment-variables
+CIS Controls:
+Version 6
+18 Application Software Security Application Software Security
+
+
+5.10 Ensure that the memory usage for containers is limited (Scored)
+
+Profile Applicability:
+ Level 1 - Docker - Linux
+Description:
+By default, all containers on a Docker host share resources equally. By using the resource management capabilities of the Docker host, you can control the amount of memory that a container is able to use.
+Rationale:
+By default a container can use all of the memory on the host. You can use memory limit mechanisms to prevent a denial of service occurring where one container consumes all of the host’s resources and other containers on the same host are therefore not able to function. Having no limit on memory usage can lead to issues where one container can easily make the whole system unstable and as a result unusable.
+Audit:
+You should run the command below: docker ps --quiet --all | xargs docker inspect --format '{{ .Id }}: Memory={{ .HostConfig.Memory }}'
+If this command returns 0, it means that memory limits are not in place; if it returns a non-zero value, it means that they are in place.
+Remediation:
+You should run the container with only as much memory as it requires by using the --memory argument. For example, you could run a container using the command below: docker run --interactive --tty --memory 256m centos /bin/bash
+In the example above, the container is started with a memory limit of 256 MB. Note that the output of the command below returns values in scientific notation if memory limits are in place. docker inspect --format='{{.Config.Memory}}' 7c5a2d4c7fe0
+162 | P a g e
+For example, if the memory limit is set to 256 MB for a container instance, the output of the command above would be 2.68435456e+08 and NOT 256m. You should convert this value using a scientific calculator.
+Impact:
+If correct memory limits are not set on each container, one process can expand its usage and cause other containers to run out of resources.
+Default Value:
+By default, all containers on a Docker host share their resources equally and no memory limits are enforced.
+References:
+1. https://goldmann.pl/blog/2014/09/11/resource-management-in-docker/
+2. https://docs.docker.com/engine/reference/commandline/run/#options
+3. https://docs.docker.com/engine/admin/runmetrics/
+CIS Controls:
+Version 6
+18 Application Software Security Application Software Security
+
+
+5.28 Ensure that the PIDs cgroup limit is used (Scored)
+
+Profile Applicability:
+ Level 1 - Docker - Linux
+Description:
+You should use the --pids-limit flag at container runtime.
+Rationale:
+Attackers could launch a fork bomb with a single command inside the container. This fork bomb could crash the entire system and would require a restart of the host to make the system functional again. Using the PIDs cgroup parameter --pids-limit would prevent this kind of attack by restricting the number of forks that can happen inside a container within a specified time frame.
+Audit:
+You should run the command below and ensure that PidsLimit is not set to 0 or -1. A PidsLimit of 0 or -1 means that any number of processes can be forked concurrently inside the container. docker ps --quiet --all | xargs docker inspect --format '{{ .Id }}: PidsLimit={{ .HostConfig.PidsLimit }}'
+Remediation:
+Use --pids-limit flag with an appropriate value when launching the container. For example: docker run -it --pids-limit 100 <Image_ID>
+In the above example, the number of processes allowed to run at any given time is set to 100. After a limit of 100 concurrently running processes is reached, Docker would restrict any new process creation.
+Impact:
+Set the PIDs limit value as appropriate. Incorrect values might leave containers unusable.
+199 | P a g e
+Default Value:
+The Default value for --pids-limit is 0 which means there is no restriction on the number of forks. Note that the PIDs cgroup limit works only for kernel versions 4.3 and higher.
+References:
+1. https://github.com/docker/docker/pull/18697
+2. https://docs.docker.com/engine/reference/commandline/run/#options
+CIS Controls:
+Version 6
+18 Application Software Security Application Software Security
+
+
+
+
