@@ -1,0 +1,20 @@
+on the VM
+
+Pull github repository
+----------------------
+-> git init
+-> git remote https://github.com/MattRo74/microservices-security-project.git
+-> git pull https://github.com/MattRo74/microservices-security-project.git
+
+
+Create docker image
+-------------------
+-> login with root: su root
+-> Source: /udacity/starter
+-> docker build -t udacity-security .
+-> Source: home/vboxuser/udacity (cd ..) 
+-> Install go 1.22 (manual)
+-> export PATH=$PATH:/usr/local/go/bin
+
+
+
