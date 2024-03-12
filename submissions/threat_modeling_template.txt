@@ -3,15 +3,36 @@
 ----------------------------
 Task: Given Docker's system components and the STRIDE framework, identify five potential threats that may arise.
 
-Threat 1:
 
-Threat 2:
+Threat 1: Misconfiguration of Docker Host by unlimited memory usage (denial of service)
 
-Threat 3:
+By default, all container can use all memory on the host. In this case, the daemon memory for the running container my be over
+allocated. This allows attackers to cause a denial of service why overwhelming the system. This kind of misconfiguration is handled in Finding 2.
 
-Threat 4:
 
-Threat 5:
+Threat 2: Disabled Content trust regarding public docker hub (Spoofing)
+
+By default, content trust is disabled by default. Attackers can manipulate container images on the public docker hub. Therefore,
+its a good idea to use a digital signature to allow a client side verification. In Finding 1 I enable content trust.
+
+
+Threat 3: Launching a fork bomb in a container (Tampering)
+
+By default, a pids-limit flag isn not set at container runtime. With a single command, an attacker can crash the entire system.
+For that reason you should restrict the number of forks. This is done by Finding 3.
+
+
+Threat 4: Unspecified Docker file (Elevation of Privileg) 
+
+In a dockerfile you can specify a user, otherwise the container will be executed by using the root user. This affects the 
+client authorization. This threat is associated withe the "Elevation of privilege". 
+
+
+Threat 5: Sensitive Data om Container Image (Information Disclosure)
+
+Before pushing an image to public docker hub, you should be aware that you don't publish any secrets. Exposing sensitive Data
+at runtime affects the image security.
+
 
 --------------------------------
 -- Kubernetes Threat Modeling --
@@ -19,15 +40,31 @@ Threat 5:
 
 Task: Given Kubernetes' system components and the STRIDE framework, identify five potential threats that may arise.
 
-Threat 1:
+Threat 1: Misconfiguration of the kubelet.conf worker (Tampering)
 
-Threat 2:
+The configuration my be tempared with by an attacker. This could be done by modifying vital system-level configurations
+such as pod specs.
 
-Threat 3:
+Threat 2: Excessive Traffic to the API server (denial of service)
 
-Threat 4:
+An attacker overwhelmed the endpoint of the API Server. In this case, the pod can be scheduled incorrectly by
+the kube-scheduler.
 
-Threat 5:
+Threat 3: Escalated privileges regarding kubelet (Elevation of Privilege)
+
+The authorization mode argument is set to always allow. An attacker can be able to escalate privileges. 
+
+Threat 4: Exposing etcd (information desclosure)
+
+Using an unsecure network traffic can lead to an exposure of sensitive informationen by an attacker. For that reason,
+you should use an encryption of etcd content and using TLS to access etcd only from the kube-api-server. 
+
+
+Threat 5: Exposing the API Server (Spoofing)
+
+An attacker can spoof the API Server by malicious calls. This can be mitigated by ensuring calls to the API server over 
+TLS. Anonymous and basic authentication should not be used.
+
 
 
 -------------------------------------------
@@ -36,13 +73,32 @@ Threat 5:
 
 Task: From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
 
+In this screenshot, you see 37 Fails from docker-bench:
+
+https://github.com/MattRo74/microservices-security-project/blob/main/submissions/suse_docker_environment_out_of_box_start.png
+
+The following three finding were hardend
+
+
 Finding 1: 4.5 Ensure Content trust for Docker is Enabled (Scored)
+
+Content trust is enabled to allow a client side verification:
+
+https://github.com/MattRo74/microservices-security-project/blob/main/submissions/suse_docker_environment_hardened_F4_5.png
+
 
 
 Finding 2: 5.10 Ensure that the memory usage for containers is limited (Scored)
 
+Memory usage is set to 256 MB:
+
+https://github.com/MattRo74/microservices-security-project/blob/main/submissions/suse_docker_environment_hardened_F5_10.png
 
 Finding 3: 5.28 Ensure that the PIDs cgroup limit is used (Scored)
+
+The number of processes allowed to run at any given time is set to 100:
+
+https://github.com/MattRo74/microservices-security-project/blob/main/submissions/suse_docker_environment_hardened_F5_28.png
 
 
 

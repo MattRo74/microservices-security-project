@@ -1,0 +1,6 @@
+Task: Write at least 200 words describing a Kubernetes-specific test plan based on what you learned from the course. 
+The test plan does not need to address specific hardening steps. Answer these two questions in your test plan: 
+
+How will you test the changes?
+How will you ensure the changes don't negatively affect your cluster?
+
