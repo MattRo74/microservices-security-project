@@ -1,6 +1,21 @@
-Task: Write at least 200 words describing a Kubernetes-specific test plan based on what you learned from the course. 
-The test plan does not need to address specific hardening steps. Answer these two questions in your test plan: 
+Operational test plan
 
-How will you test the changes?
-How will you ensure the changes don't negatively affect your cluster?
+1. For testing purposes, implemement a developing (and staging) area before deploying to the production cluster. This reduces
+   the risk of issues or crashes in the production environment. 
+2. Before building a container, use unit testing to identify failures or unwanted changes in functionality. This step reduces  
+  the risk of failures in the testing enviroment.
+3. Use Git (Hub) for version controlling. The actual status is always available. In the case of failures, it is
+   possible to roll back to an older version.
+4. Run security tests and monitor metrics for regressions to identify undisired changes from hardening.
+5. Implement monitoring dashboards for observability und set alerts in the case problems occur in the (testing) environment.
+6. If the service runs well, increase the traffic. You can do this step by step until a defined boundary. 
+7. You can use traffic management tools to ensure that in the case of failure the user we shifted to a running system.
+8. Implement monitoring dashboards for observability und set alerts in the case problem occur in the (testing) environment
+9. Deloy the changes to the production cluster and set a monitoring to unsure that the cluster is running stable.
+10. Document the problems and changes. This will help you and your team quickly resolve future problems that are similar.
+
+
+
+
+
 
