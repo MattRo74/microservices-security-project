@@ -35,3 +35,8 @@ Verzeichnis: /home/udacity/udacity/nd064-c3-microservices-security-project-start
 
 ssh root@192.168.50.101
 
+
+kubectl --kubeconfig kube_config_cluster.yml get nodes
+kubectl --kubeconfig kube_config_cluster.yml get pods -A
+
+kubectl --kubeconfig kube_config_cluster.yml logs falco-mr58w --namespace falco -c falco | grep etc/shadow
