@@ -1,6 +1,35 @@
-Update docker:
+Update docker in root@192.168.50.101:
+
+sudo zypper update
+
 sudo zypper remove docker
 sudo zypper install docker-20.10.17_ce
+
+sudo systemctl status docker
+sudo systemctl start docker
+docker ps -a
+ls -l /var/run/docker.sock
+sudo chmod 666 /var/run/docker.sock
+sudo usermod -aG docker root
+
+
+Install rke:
+sudo zypper in wget
+wget https://github.com/rancher/rke/releases/download/v1.2.6/rke_linux-amd64
+sudo mv rke_linux-amd64 /usr/local/bin/rke
+cd /usr/local/bin/
+ls -l
+chmod +x rke
+rke --version
+
+install kubectl
+curl -LO "https://dl.k8s.io/release/v1.20.4/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/v1.20.4/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --short
+
+
 
 Verzeichnis: /home/udacity/udacity/nd064-c3-microservices-security-project-starter/starter
 
