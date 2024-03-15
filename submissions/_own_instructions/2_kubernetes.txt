@@ -39,4 +39,15 @@ ssh root@192.168.50.101
 kubectl --kubeconfig kube_config_cluster.yml get nodes
 kubectl --kubeconfig kube_config_cluster.yml get pods -A
 
-kubectl --kubeconfig kube_config_cluster.yml logs falco-mr58w --namespace falco -c falco | grep etc/shadow
+
+kubectl --kubeconfig kube_config_cluster.yml logs falco-26bkc --namespace falco -c falco
+kubectl --kubeconfig kube_config_cluster.yml logs falco-26bkc --namespace falco -c falco | grep adduser
+kubectl --kubeconfig kube_config_cluster.yml logs falco-26bkc --namespace falco -c falco | grep etc/shadow
+
+kube-prometheus-stack-1710495604
+kube-prometheus-stack-1710495604
+
+kube-prometheus-stack-1710495604-grafana-648cdfc44f-zj7x5
+
+
+helm install --kubeconfig kube_config_cluster.yml prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --generate-name  --version 18.0.8
